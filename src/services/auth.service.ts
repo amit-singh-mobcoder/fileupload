@@ -44,6 +44,7 @@ export class AuthService {
         const {email, password} = userDetails;
 
         const user = await this._userRepository.findUserByEmailWithPassword(email);
+        console.log('user',user)
         if(!user){
             throw new ApiError(HttpStatusCodes.NOT_FOUND, Messages.USER.INVALID_EMAIL);
         }

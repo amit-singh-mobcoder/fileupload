@@ -5,8 +5,7 @@
   "scripts": {
     "start": "tsc && node dist/app.js",
     "dev": "nodemon src/index.ts",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
