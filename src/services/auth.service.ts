@@ -44,7 +44,7 @@ export class AuthService {
         const {email, password} = userDetails;
 
         const user = await this._userRepository.findUserByEmailWithPassword(email);
-        console.log('user',user)
+        // console.log('user',user)
         if(!user){
             throw new ApiError(HttpStatusCodes.NOT_FOUND, Messages.USER.INVALID_EMAIL);
         }
@@ -69,7 +69,7 @@ export class AuthService {
 
     async getProfile(userDetails: any){
         const {email} = userDetails;
-        console.log("email", email)
+        // console.log("email", email)
         const user = await this._userRepository.findUserByEmail(email);
         return user;
     }

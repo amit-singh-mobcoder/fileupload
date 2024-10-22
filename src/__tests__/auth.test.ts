@@ -14,6 +14,7 @@ describe('Auth Controller Testing', () => {
             console.log('db connected successfully')
         } catch (error) {
             console.error('Failed to connect db', error);
+            process.exit(1);
         }
     })
 
@@ -145,6 +146,8 @@ describe('Auth Controller Testing', () => {
     })
 
     describe('GET /api/v1/auth/profile', () => {
+
+        //TEST CASE 1
         describe('given a accessToken in header', () => {
             it('should return a logged in user profile', async () => {
                 const userDoc = await UserModel.create(
@@ -172,6 +175,7 @@ describe('Auth Controller Testing', () => {
             })
         })
 
+        //TEST CASE 2
         describe('access Token not provided in header', () => {
             it('should fail to return logged in user profile', async () => {
                 const response = await request(app)
