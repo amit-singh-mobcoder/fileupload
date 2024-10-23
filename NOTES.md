@@ -67,3 +67,102 @@ To run your tests, simply execute the following command in your terminal:
 npm test
 ```
 This command will trigger Jest to find and run all test files matching the specified pattern.
+
+# Winston logger setup guide
+
+### Step 1: Install Dependencies
+```bash
+npm install winston
+```
+
+### Step 2: create util file for logger
+`src/utils/logger.ts`
+
+```javascript
+import { createLogger, format, transports } from 'winston';
+
+const { combine, timestamp, printf, colorize, errors } = format;
+
+// Custom log format
+const logFormat = printf(({ level, message, timestamp, stack}) => {
+  return `${timestamp} [${level}]: ${stack || message}`;
+});
+
+// Create the logger
+const logger = createLogger({
+  level: 'info', // Minimum level of logs to capture
+  format: combine(
+    colorize(), // Colorize logs
+    timestamp(), // Add timestamps to logs
+    errors({ stack: true }), // Log errors with stack traces
+    logFormat // Apply the custom format
+  ),
+  transports: [
+    new transports.Console(), // Log to console
+    new transports.File({ filename: 'logs/error.log', level: 'error' }), // Log errors to file
+    new transports.File({ filename: 'logs/combined.log' }) // Log all messages to a file
+  ],
+});
+
+export default logger;
+```
+
+
+### Step 3: Create a logger middleware
+`src/middlewares/logger.middleware.ts`
+
+```javascript
+import { Request, Response, NextFunction } from 'express';
+import logger from '../utils/logger';
+
+const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const start = Date.now();
+
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+
+        let statusColor: string;
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+            statusColor = '\x1b[32m'; // Green
+        } else if (res.statusCode >= 400 && res.statusCode < 500) {
+            statusColor = '\x1b[33m'; // Yellow
+        } else if (res.statusCode >= 500) {
+            statusColor = '\x1b[31m'; // Red
+        } else {
+            statusColor = '\x1b[0m'; 
+        }
+
+        // Reset color after the status code
+        const resetColor = '\x1b[0m'; 
+
+        logger.info(`${req.method} ${req.url} - ${statusColor}${res.statusCode}${resetColor} [${duration}ms]`);
+    });
+
+    next();
+};
+
+export default loggerMiddleware;
+```
+
+
+### Step 4: import middleware in `app.ts`
+import logger middleware in app.ts file an use it before every route
+```javascript
+import express from 'express'
+import cors from 'cors'
+import errorHandler from './middlewares/error-handler.middleware'
+import routes from './routes/index'
+import loggerMiddleware from './middlewares/logger.middleware'
+
+const app = express();
+
+app.use(loggerMiddleware)
+app.use(express.json())
+app.use(cors())
+
+app.use('/api/v1', routes);
+
+app.use(errorHandler)
+export { app }
+```
+
