@@ -24,4 +24,9 @@ export class UserRepository {
         const user = await UserModel.findOne({email}).select("+password");
         return user;
     }
+
+    async findByIdAndUpdate(id: string, query: any){
+        const updatedUser = await UserModel.findByIdAndUpdate(id, query);
+        return updatedUser;
+    }
 }

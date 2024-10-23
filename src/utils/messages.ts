@@ -13,7 +13,8 @@ export const Messages = {
       USER_DELETED: 'User deleted successfully.',
       ROLE_FETECHED: 'User role fetched successfully',
       PERMISSION_UPDATED: 'User Permission updated successfully.',
-      AVATAR_MISSING: 'Avatar is missing.'
+      AVATAR_MISSING: 'Avatar is missing.',
+      AVATAR_UPDATED: 'Avatar updated successfully.'
     },
     
     AUTH: {
