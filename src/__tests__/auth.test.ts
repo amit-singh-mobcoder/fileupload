@@ -11,7 +11,7 @@ describe('Auth Controller Testing', () => {
     beforeAll(async () => {
         try {
             await mongoose.connect('mongodb://localhost:27017/fileupload-test')
-            console.log('db connected successfully')
+            // console.log('db connected successfully')
         } catch (error) {
             console.error('Failed to connect db', error);
             process.exit(1);
@@ -21,7 +21,7 @@ describe('Auth Controller Testing', () => {
     afterAll(async () => {
         await mongoose.connection.dropDatabase();
         await mongoose.connection.close();
-        console.log('mongodb connection closed')
+        // console.log('mongodb connection closed')
     })
 
     describe('POST /api/v1/auth/register', () => {
